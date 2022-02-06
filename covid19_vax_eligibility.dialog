@@ -1,0 +1,340 @@
+{
+ "$schema": "../../app.schema",
+ "$type": "Microsoft.AdaptiveDialog",
+ "rules": [
+  {
+   "$type": "Microsoft.UnknownIntentRule",
+   "steps": [
+    {
+     "$type": "Microsoft.SetProperty",
+     "property": "dialog.version",
+     "value": "2"
+    },
+    {
+     "$type": "Microsoft.SendActivity",
+     "activity": "**Developer note**\r\n\r\nThe COVID-19 vaccine eligibility template was created using information from the U.S. Centers for Disease Control and Prevention and their [Immunization Playbook](https://www.cdc.gov/vaccines/imz-managers/downloads/COVID-19-Vaccination-Program-Interim_Playbook.pdf) current as of December 16, 2020. The material of the template is otherwise available for no charge at the aforementioned website. New information may not be fully reflected in the template. Users are expected to update and customize the template as appropriate for their own needs. Microsoft is not responsible for the performance, accuracy, or results from the use of the template or any modifications to the template. \r\n\r\nAn enterprise version of this vaccine eligibility bot is available as part of the [Microsoft Consulting Services Vaccination Registration and Administration Solution (VRAS)](https://blogs.microsoft.com/blog/2020/12/11/successful-covid-19-vaccine-delivery-requires-strong-tech-partnerships)"
+    },
+    {
+     "$type": "Microsoft.ChoiceInput",
+     "prompt": "customLocalizedStrings[\"COVID19/vax/age\"]",
+     "style": "HeroCard",
+     "property": "dialog.age"
+    },
+    {
+     "$type": "Microsoft.IfCondition",
+     "condition": "dialog.age.index === 0",
+     "steps": [
+      {
+       "$type": "Microsoft.SendActivity",
+       "activity": "customLocalizedStrings[COVID19/vax/contraindicated]"
+      },
+      {
+       "$type": "Microsoft.ChoiceInput",
+       "prompt": "systemLocalizedStrings[\"/builtin/feedback.triage_prompt_question\"]",
+       "style": "HeroCard",
+       "property": "dialog.show_feedback"
+      },
+      {
+       "$type": "Microsoft.IfCondition",
+       "condition": "dialog.show_feedback.index == 0",
+       "steps": [
+        {
+         "$type": "Microsoft.BeginDialog",
+         "dialog": "/builtin/feedback",
+         "property": "dialog.undefined"
+        }
+       ],
+       "elseSteps": []
+      }
+     ],
+     "elseSteps": [
+      {
+       "$type": "Microsoft.ChoiceInput",
+       "prompt": "customLocalizedStrings[\"COVID19/vax/covid19_pos\"]",
+       "style": "HeroCard",
+       "property": "dialog.covidIsolation"
+      },
+      {
+       "$type": "Microsoft.IfCondition",
+       "condition": "dialog.covidIsolation.index === 1",
+       "steps": [
+        {
+         "$type": "Microsoft.SendActivity",
+         "activity": "customLocalizedStrings[COVID19/vax/contraindicated]"
+        },
+        {
+         "$type": "Microsoft.ChoiceInput",
+         "prompt": "systemLocalizedStrings[\"/builtin/feedback.triage_prompt_question\"]",
+         "style": "HeroCard",
+         "property": "dialog.show_feedback"
+        },
+        {
+         "$type": "Microsoft.IfCondition",
+         "condition": "dialog.show_feedback.index == 0",
+         "steps": [
+          {
+           "$type": "Microsoft.BeginDialog",
+           "dialog": "/builtin/feedback",
+           "property": "dialog.undefined"
+          }
+         ],
+         "elseSteps": []
+        }
+       ],
+       "elseSteps": [
+        {
+         "$type": "Microsoft.ChoiceInput",
+         "prompt": "customLocalizedStrings[\"COVID19/vax/allergies\"]",
+         "style": "HeroCard",
+         "property": "dialog.vaccineAllergies"
+        },
+        {
+         "$type": "Microsoft.IfCondition",
+         "condition": "dialog.vaccineAllergies.index === 1",
+         "steps": [
+          {
+           "$type": "Microsoft.SendActivity",
+           "activity": "customLocalizedStrings[COVID19/vax/contraindicated]"
+          },
+          {
+           "$type": "Microsoft.ChoiceInput",
+           "prompt": "systemLocalizedStrings[\"/builtin/feedback.triage_prompt_question\"]",
+           "style": "HeroCard",
+           "property": "dialog.show_feedback"
+          },
+          {
+           "$type": "Microsoft.IfCondition",
+           "condition": "dialog.show_feedback.index == 0",
+           "steps": [
+            {
+             "$type": "Microsoft.BeginDialog",
+             "dialog": "/builtin/feedback",
+             "property": "dialog.undefined"
+            }
+           ],
+           "elseSteps": []
+          }
+         ],
+         "elseSteps": [
+          {
+           "$type": "Microsoft.ChoiceInput",
+           "prompt": "customLocalizedStrings[\"COVID19/vax/not_to_receive\"]",
+           "style": "HeroCard",
+           "property": "dialog.covidVaxContra"
+          },
+          {
+           "$type": "Microsoft.IfCondition",
+           "condition": "dialog.covidVaxContra.index === 1",
+           "steps": [
+            {
+             "$type": "Microsoft.SendActivity",
+             "activity": "customLocalizedStrings[COVID19/vax/contraindicated]"
+            },
+            {
+             "$type": "Microsoft.ChoiceInput",
+             "prompt": "systemLocalizedStrings[\"/builtin/feedback.triage_prompt_question\"]",
+             "style": "HeroCard",
+             "property": "dialog.show_feedback"
+            },
+            {
+             "$type": "Microsoft.IfCondition",
+             "condition": "dialog.show_feedback.index == 0",
+             "steps": [
+              {
+               "$type": "Microsoft.BeginDialog",
+               "dialog": "/builtin/feedback",
+               "property": "dialog.undefined"
+              }
+             ],
+             "elseSteps": []
+            }
+           ],
+           "elseSteps": [
+            {
+             "$type": "Microsoft.ChoiceInput",
+             "prompt": "customLocalizedStrings[\"COVID19/vax/first_responder\"]",
+             "style": "HeroCard",
+             "property": "dialog.healthWorker"
+            },
+            {
+             "$type": "Microsoft.IfCondition",
+             "condition": "dialog.healthWorker.index === 0",
+             "steps": {
+              "$type": "Microsoft.ChoiceInput",
+              "prompt": "customLocalizedStrings[\"COVID19/vax/group_home\"]",
+              "style": "HeroCard",
+              "property": "dialog.groupHome"
+             }
+            },
+            {
+             "$type": "Microsoft.IfCondition",
+             "condition": "(dialog.healthWorker.index === 0) && (scenario.groupHome.index === 0)",
+             "steps": {
+              "$type": "Microsoft.ChoiceInput",
+              "prompt": "customLocalizedStrings[\"COVID19/vax/essential\"]",
+              "style": "HeroCard",
+              "property": "dialog.essentialWorker"
+             }
+            },
+            {
+             "$type": "Microsoft.ChoiceInput",
+             "prompt": "customLocalizedStrings[\"COVID19/vax/vaccine_complications\"]",
+             "style": "HeroCard",
+             "property": "dialog.vaxComplication"
+            },
+            {
+             "$type": "Microsoft.ChoiceInput",
+             "prompt": "customLocalizedStrings[\"COVID19/vax/conditions\"]",
+             "style": "SuggestedAction",
+             "property": "dialog.riskFactors"
+            },
+            {
+             "$type": "Microsoft.SwitchCondition",
+             "condition": "dialog.wave",
+             "cases": {
+              "'1a'": [
+               {
+                "$type": "Microsoft.SendActivity",
+                "activity": "customLocalizedStrings[COVID19/vax/wave_1a]"
+               },
+               {
+                "$type": "Microsoft.SendActivity",
+                "activity": "customLocalizedStrings[COVID19/vax/pregnant]"
+               },
+               {
+                "$type": "Microsoft.SendActivity",
+                "activity": "customLocalizedStrings[COVID19/vax/risk_assessment]"
+               },
+               {
+                "$type": "Microsoft.SendActivity",
+                "activity": "customLocalizedStrings[COVID19/vax/age_limit]"
+               },
+               {
+                "$type": "Microsoft.ChoiceInput",
+                "prompt": "systemLocalizedStrings[\"/builtin/feedback.triage_prompt_question\"]",
+                "style": "HeroCard",
+                "property": "dialog.show_feedback"
+               },
+               {
+                "$type": "Microsoft.IfCondition",
+                "condition": "dialog.show_feedback.index == 0",
+                "steps": [
+                 {
+                  "$type": "Microsoft.BeginDialog",
+                  "dialog": "/builtin/feedback",
+                  "property": "dialog.undefined"
+                 }
+                ],
+                "elseSteps": []
+               }
+              ],
+              "'1b'": [
+               {
+                "$type": "Microsoft.SendActivity",
+                "activity": "customLocalizedStrings[COVID19/vax/wave_1b]"
+               },
+               {
+                "$type": "Microsoft.SendActivity",
+                "activity": "customLocalizedStrings[COVID19/vax/pregnant]"
+               },
+               {
+                "$type": "Microsoft.SendActivity",
+                "activity": "customLocalizedStrings[COVID19/vax/risk_assessment]"
+               },
+               {
+                "$type": "Microsoft.SendActivity",
+                "activity": "customLocalizedStrings[COVID19/vax/age_limit]"
+               },
+               {
+                "$type": "Microsoft.ChoiceInput",
+                "prompt": "systemLocalizedStrings[\"/builtin/feedback.triage_prompt_question\"]",
+                "style": "HeroCard",
+                "property": "dialog.show_feedback"
+               },
+               {
+                "$type": "Microsoft.IfCondition",
+                "condition": "dialog.show_feedback.index == 0",
+                "steps": [
+                 {
+                  "$type": "Microsoft.BeginDialog",
+                  "dialog": "/builtin/feedback",
+                  "property": "dialog.undefined"
+                 }
+                ],
+                "elseSteps": []
+               }
+              ],
+              "'1c'": [
+               {
+                "$type": "Microsoft.SendActivity",
+                "activity": "customLocalizedStrings[COVID19/vax/wave_1c]"
+               },
+               {
+                "$type": "Microsoft.SendActivity",
+                "activity": "customLocalizedStrings[COVID19/vax/pregnant]"
+               },
+               {
+                "$type": "Microsoft.SendActivity",
+                "activity": "customLocalizedStrings[COVID19/vax/risk_assessment]"
+               },
+               {
+                "$type": "Microsoft.SendActivity",
+                "activity": "customLocalizedStrings[COVID19/vax/age_limit]"
+               },
+               {
+                "$type": "Microsoft.ChoiceInput",
+                "prompt": "systemLocalizedStrings[\"/builtin/feedback.triage_prompt_question\"]",
+                "style": "HeroCard",
+                "property": "dialog.show_feedback"
+               },
+               {
+                "$type": "Microsoft.IfCondition",
+                "condition": "dialog.show_feedback.index == 0",
+                "steps": [
+                 {
+                  "$type": "Microsoft.BeginDialog",
+                  "dialog": "/builtin/feedback",
+                  "property": "dialog.undefined"
+                 }
+                ],
+                "elseSteps": []
+               }
+              ]
+             },
+             "defult": [
+              {
+               "$type": "Microsoft.SendActivity",
+               "activity": "customLocalizedStrings[COVID19/vax/low_risk]"
+              },
+              {
+               "$type": "Microsoft.ChoiceInput",
+               "prompt": "systemLocalizedStrings[\"/builtin/feedback.triage_prompt_question\"]",
+               "style": "HeroCard",
+               "property": "dialog.show_feedback"
+              },
+              {
+               "$type": "Microsoft.IfCondition",
+               "condition": "dialog.show_feedback.index == 0",
+               "steps": [
+                {
+                 "$type": "Microsoft.BeginDialog",
+                 "dialog": "/builtin/feedback",
+                 "property": "dialog.undefined"
+                }
+               ],
+               "elseSteps": []
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}
